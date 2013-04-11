@@ -1,6 +1,5 @@
 import datetime
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.db import models
@@ -16,6 +15,14 @@ try:
     now = timezone.now
 except ImportError:
     now = datetime.datetime.now
+    
+# support for custom User models in Django 1.5+
+try:
+    from django.contrib.auth import get_user_model
+except ImportError:  # django < 1.5
+    from django.contrib.auth.models import User
+else:
+    User = get_user_model()
 
 class NotificationQuerySet(models.query.QuerySet):
     
